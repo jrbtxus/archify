@@ -11949,11 +11949,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         state.y = centerY - contentY * next;
         apply();
       }
-      function scrollableWheelTarget(node, event) {
+      function scrollableWheelTarget(node, horizontal) {
         var current = node;
-        var deltaX = Number(event.deltaX) || 0;
-        var deltaY = Number(event.deltaY) || 0;
-        var horizontal = event.shiftKey || Math.abs(deltaX) > Math.abs(deltaY);
         while (current) {
           var overflowX = '';
           var overflowY = '';
@@ -11985,30 +11982,29 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         var delta = event.deltaMode === 1 ? event.deltaY * 16 :
           event.deltaMode === 2 ? event.deltaY * (svg.clientHeight || 1) : event.deltaY;
         if (!delta || !Number.isFinite(delta)) return;
-        if (scrollableWheelTarget(target, event)) return;
-        var uiTarget = null;
-        if (target && target.closest) {
-          uiTarget = target.closest('[data-legend], .diagram-nav, .focus-chip, .node-finder, .diagram-guide, .overview-map, .route-probe, .semantic-lens');
-        }
         var horizontal = event.shiftKey || Math.abs(deltaX) > Math.abs(delta);
-        if (uiTarget) {
-          event.preventDefault();
+        var overlay = target.closest
+          ? target.closest('[data-legend], .diagram-nav, .focus-chip, .node-finder, .diagram-guide, .overview-map, .route-probe, .semantic-lens')
+          : null;
+        // The axis is classified once, from normalized deltas, and the same
+        // result decides both the scrollable ancestor and zoom eligibility.
+        // A gesture the camera does not consume keeps native scrolling: only a
+        // wheel that will actually move the camera may suppress the default.
+        if (scrollableWheelTarget(target, horizontal) || overlay || horizontal) {
+          wheelZoomAccum = 0;
           return;
         }
-        if (horizontal) {
-          event.preventDefault();
+        var zoomingIn = delta < 0;
+        if (zoomingIn ? state.scale >= 3 : state.scale <= 1) {
+          wheelZoomAccum = 0;
           return;
         }
         event.preventDefault();
-        var zoomingIn = delta < 0;
-        var zoomingOut = delta > 0;
-        if (!zoomingIn && !zoomingOut) return;
-        if (!zoomingIn && state.scale <= 1) return;
-        if (zoomingIn && state.scale >= 3) return;
         container.classList.add('is-wheel-zooming');
         if (wheelZoomTimer) clearTimeout(wheelZoomTimer);
         wheelZoomTimer = setTimeout(function () {
           wheelZoomTimer = 0;
+          wheelZoomAccum = 0;
           container.classList.remove('is-wheel-zooming');
         }, 120);
         var step = 60;
