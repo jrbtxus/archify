@@ -51,13 +51,21 @@ from the current head. The author's reported observations:
   moved the page again, i.e. reaching a bound hands the gesture back to native
   scrolling; `Ctrl`+wheel kept browser zoom; after zooming in, `Shift`+wheel
   scrolled horizontally; the classic wide diagram still scrolled horizontally.
+- Windows laptop, same Chrome, recorded wheel notches: each notch reports
+  `deltaY 100` with `deltaMode 0` and no modifiers, and consecutive notches added
+  1, 2, 2, 1, 2 steps of 0.25 instead of a fixed step; notches taken at the 1x
+  bound added 0 steps.
+- Windows laptop, same Chrome, pre-fix comparison build (revision `e03c341`): with
+  the pointer over the diagram at 1x, a downward wheel left the page at scrollY 0
+  — the blocking defect reproduced on real hardware, in contrast to the fixed
+  build above where the same gesture moves the page.
 - Android phone, Chrome 151.0.7922.173: two-finger pinch zoomed the page, which is
   the browser-controlled touch behavior, so the touch path is unaffected by the
   wheel listener.
 
-Not reported or not exercised in this session: the pre-fix comparison build, the
-per-notch step count, trackpad momentum at a bound, Firefox/Safari and other
-engines, macOS, display scaling, and installed-package hosts.
+Not exercised in this session: trackpad momentum at a bound, Firefox/Safari and
+other engines, macOS, display scaling, touch-specific viewer behavior on narrow
+screens, and installed-package hosts.
 
 ## Captures
 
@@ -73,8 +81,9 @@ engines, macOS, display scaling, and installed-package hosts.
 
 ## Not tested
 
-- Trackpad momentum at a bound and the per-notch step count were not observed or
-  measured; only the two hosts above were used.
+- Trackpad momentum at a bound was not observed, and only the two hosts above were
+  used; the per-notch step counts above are what this one wheel reported, not a
+  claim about other devices.
 - Firefox, Safari and other engines, macOS, display scaling, touch-specific
   viewer behavior on narrow screens, and installed-package hosts were not
   exercised. Device and trial-use acceptance remain separate claims from these
