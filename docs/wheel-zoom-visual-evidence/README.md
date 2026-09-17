@@ -44,7 +44,9 @@ and the navigation overlays stay in place, and the percent control reads 150%.
 ## Device acceptance
 
 Status: **partially exercised** by the author on 2026-09-17, on artifacts rendered
-from the current head. The author's reported observations:
+from revision `78cb8a8`, whose Viewer sources are identical to the code revision
+`4e25478`; the captures and the automated results above keep their own revisions.
+The author's reported observations:
 
 - Windows laptop, Chrome 151.0.7922.138, trackpad: two-finger swipe zoomed in and
   out as expected; after zooming back out to 100%, continuing the same gesture
