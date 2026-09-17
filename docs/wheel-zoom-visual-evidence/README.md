@@ -2,7 +2,8 @@
 
 Captures produced from revision `b9410d4` with Node 22.23.2 and headless
 Chromium 131, using the commands below. Automated browser evidence, perceptual
-review and the untested remainder are reported separately.
+visual review and device acceptance are reported separately. Nothing below
+claims a check that was not performed.
 
 ## Automated browser evidence
 
@@ -40,6 +41,24 @@ correctly magnified about the pointer. Recorded alongside that review: the
 magnified diagram is clipped at the stage boundary, the cards below the diagram
 and the navigation overlays stay in place, and the percent control reads 150%.
 
+## Device acceptance
+
+Status: **partially exercised** by the author on 2026-09-17, on artifacts rendered
+from the current head. The author's reported observations:
+
+- Windows laptop, Chrome 151.0.7922.138, trackpad: two-finger swipe zoomed in and
+  out as expected; after zooming back out to 100%, continuing the same gesture
+  moved the page again, i.e. reaching a bound hands the gesture back to native
+  scrolling; `Ctrl`+wheel kept browser zoom; after zooming in, `Shift`+wheel
+  scrolled horizontally; the classic wide diagram still scrolled horizontally.
+- Android phone, Chrome 151.0.7922.173: two-finger pinch zoomed the page, which is
+  the browser-controlled touch behavior, so the touch path is unaffected by the
+  wheel listener.
+
+Not reported or not exercised in this session: the pre-fix comparison build, the
+per-notch step count, trackpad momentum at a bound, Firefox/Safari and other
+engines, macOS, display scaling, and installed-package hosts.
+
 ## Captures
 
 ![Before wheel zoom](before-wheel.png)
@@ -54,14 +73,12 @@ and the navigation overlays stay in place, and the percent control reads 150%.
 
 ## Not tested
 
-- Physical trackpad and two-finger scrolling, momentum, pinch gestures and
-  OS-level scroll or acceleration settings: the wheel input is headless Chrome's
-  trusted CDP input, not a device session, so no trackpad timing, inertia or
-  platform gesture behavior is claimed.
-- Other browsers, OS hosts, display scaling, touch devices, and installed-package
-  hosts were not exercised. Device and trial-use acceptance is a separate claim
-  from these browser checks; see
-  [Contributing](../../CONTRIBUTING.md#choose-evidence-by-impact).
+- Trackpad momentum at a bound and the per-notch step count were not observed or
+  measured; only the two hosts above were used.
+- Firefox, Safari and other engines, macOS, display scaling, touch-specific
+  viewer behavior on narrow screens, and installed-package hosts were not
+  exercised. Device and trial-use acceptance remain separate claims from these
+  browser checks; see [Contributing](../../CONTRIBUTING.md#choose-evidence-by-impact).
 
 The generated HTML is not checked in because the public renderer tests already
 cover it and the full viewer runtime would be duplicated here.
